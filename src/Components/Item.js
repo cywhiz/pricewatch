@@ -21,7 +21,7 @@ class Item extends React.Component {
 
     for (var i in jsonData) {
       let url = 'https://amazon.co.jp/gp/offer-listing/' + i;
-      let proxy = 'https://proxycy.herokuapp.com/?' + url;
+      let proxy = 'https://proxycy.herokuapp.com/' + url;
       let ua = new UserAgent().toString();
 
       let itemNo = i;
