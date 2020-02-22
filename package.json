@@ -1,0 +1,26 @@
+{
+  "name": "price-watch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel ./src/index.html",
+    "build": "parcel build ./src/index.html -d ./public"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-react": "^7.8.3",
+    "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3",
+    "parcel-bundler": "^1.12.4",
+    "react": "^16.12.0",
+    "react-bootstrap-table-next": "^3.3.5",
+    "react-dom": "^16.12.0",
+    "user-agents": "^1.0.535"
+  }
+}

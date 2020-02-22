@@ -1,0 +1,99 @@
+.container {
+  font-family: Verdana;
+}
+
+th {
+  color: white;
+  background: skyblue;
+}
+
+td img {
+  width: 100px;
+  height: 100px;
+}
+
+.table td {
+  padding: 0;
+  /* border-top: 1px solid #cccccc; */
+}
+
+.table-bordered td {
+  vertical-align: middle;
+  border: 0;
+}
+
+tr {
+  border-top: 1px solid #cccccc;
+}
+
+.logo {
+  padding-right: 20px;
+}
+
+h1 {
+  display: inline;
+}
+
+@media (max-width: 767px) {
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tr {
+    border-top: 1px solid #cccccc;
+    padding: 10px;
+  }
+
+  .table-bordered td {
+    border: 0;
+    padding: 0;
+    font-size: 0.7em;
+  }
+
+  td,
+  tr {
+    float: left;
+  }
+
+  td:first-child {
+    width: 40%;
+  }
+
+  td:not(:first-child) {
+    width: 60%;
+  }
+
+  .logo {
+    display: block;
+    margin: auto;
+  }
+
+  h1 {
+    font-size: 8vw;
+    text-align: center;
+    display: block;
+  }
+
+  td:nth-of-type(2):before {
+    content: 'Brand ';
+    width: 35%;
+    float: left;
+  }
+  td:nth-of-type(3):before {
+    content: 'Quantity ';
+    width: 35%;
+    float: left;
+  }
+  td:nth-of-type(4):before {
+    content: 'Price ';
+    width: 35%;
+    float: left;
+  }
+  td:nth-of-type(5):before {
+    content: 'Unit Price ';
+    width: 35%;
+    float: left;
+  }
+}
