@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import cheerio from 'cheerio';
-import UserAgent from 'user-agents';
 import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import jsonData from './data.json';
@@ -9,7 +8,7 @@ import jsonData from './data.json';
 class Item extends React.Component {
   constructor() {
     super();
-    this.state = { items: [], render: false };
+    this.state = { items: [] };
   }
 
   componentDidMount() {
@@ -19,33 +18,26 @@ class Item extends React.Component {
       return +(Math.round(num + 'e+2') + 'e-2');
     }
 
+    function sleeper(ms) {
+      return function(x) {
+        return new Promise(resolve => setTimeout(() => resolve(x), ms));
+      };
+    }
+
     for (var i in jsonData) {
-      if (i % 10 == 0) {
-        setTimeout(
-          function() {
-            this.setState({ render: true });
-          }.bind(this),
-          1000
-        );
-      } else {
-        this.setState({ render: true });
-      }
-
-      let url =
-        'https://amazon.co.jp/gp/offer-listing/' + i + '/ref=dp_olp_new_mbc';
+      let url = 'https://amazon.co.jp/gp/offer-listing/' + i;
       let proxy = 'https://proxycy.herokuapp.com/' + url;
-      let ua = new UserAgent().toString();
-
       let itemNo = i;
       let qty = jsonData[i];
+
       axios
-        .get(proxy, {
-          headers: { 'User-Agent': ua }
-        })
+        .get(proxy)
         .then(res => {
           const $ = cheerio.load(res.data);
           const offer = $('.olpOffer').first();
           var item = {};
+
+          sleeper(2000);
 
           let image = $('#olpProductImage a img')
             .first()
@@ -113,22 +105,16 @@ class Item extends React.Component {
 
     const defaultSorted = [{ dataField: 'unitPrice', order: 'asc' }];
 
-    let renderContainer = <div>Component is loading..</div>;
-
-    if (this.state.render) {
-      renderContainer = (
-        <BootstrapTable
-          bootstrap4
-          keyField="image"
-          data={this.state.items}
-          columns={columns}
-          defaultSorted={defaultSorted}
-          wrapperClasses="table-responsive table-hover"
-        />
-      );
-    }
-
-    return renderContainer;
+    return (
+      <BootstrapTable
+        bootstrap4
+        keyField="image"
+        data={this.state.items}
+        columns={columns}
+        defaultSorted={defaultSorted}
+        wrapperClasses="table-responsive table-hover"
+      />
+    );
   }
 }
 
