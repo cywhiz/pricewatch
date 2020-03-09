@@ -31,7 +31,8 @@ class Item extends React.Component {
         this.setState({ render: true });
       }
 
-      let url = 'https://amazon.co.jp/gp/offer-listing/' + i;
+      let url =
+        'https://amazon.co.jp/gp/offer-listing/' + i + '/ref=dp_olp_new_mbc';
       let proxy = 'https://proxycy.herokuapp.com/' + url;
       let ua = new UserAgent().toString();
 
