@@ -9,7 +9,7 @@ import jsonData from './data.json';
 class Item extends React.Component {
   constructor() {
     super();
-    this.state = { items: [] };
+    this.state = { items: [], render: false };
   }
 
   componentDidMount() {
@@ -20,6 +20,17 @@ class Item extends React.Component {
     }
 
     for (var i in jsonData) {
+      if (i % 10 == 0) {
+        setTimeout(
+          function() {
+            this.setState({ render: true });
+          }.bind(this),
+          1000
+        );
+      } else {
+        this.setState({ render: true });
+      }
+
       let url = 'https://amazon.co.jp/gp/offer-listing/' + i;
       let proxy = 'https://proxycy.herokuapp.com/' + url;
       let ua = new UserAgent().toString();
@@ -38,7 +49,6 @@ class Item extends React.Component {
           let image = $('#olpProductImage a img')
             .first()
             .attr('src');
-          // .trim();
           let brand = $('#olpProductByline')
             .first()
             .text()
@@ -102,16 +112,22 @@ class Item extends React.Component {
 
     const defaultSorted = [{ dataField: 'unitPrice', order: 'asc' }];
 
-    return (
-      <BootstrapTable
-        bootstrap4
-        keyField="image"
-        data={this.state.items}
-        columns={columns}
-        defaultSorted={defaultSorted}
-        wrapperClasses="table-responsive table-hover"
-      />
-    );
+    let renderContainer = <div>Component is loading..</div>;
+
+    if (this.state.render) {
+      renderContainer = (
+        <BootstrapTable
+          bootstrap4
+          keyField="image"
+          data={this.state.items}
+          columns={columns}
+          defaultSorted={defaultSorted}
+          wrapperClasses="table-responsive table-hover"
+        />
+      );
+    }
+
+    return renderContainer;
   }
 }
 
