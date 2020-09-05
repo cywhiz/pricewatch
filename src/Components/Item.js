@@ -19,41 +19,35 @@ class Item extends React.Component {
     }
 
     function sleeper(ms) {
-      return function(x) {
-        return new Promise(resolve => setTimeout(() => resolve(x), ms));
+      return function (x) {
+        return new Promise((resolve) => setTimeout(() => resolve(x), ms));
       };
     }
 
     for (var i in jsonData) {
-      let url = 'https://amazon.co.jp/gp/offer-listing/' + i;
+      let url = 'https://www.amazon.com/gp/offer-listing/' + i;
       let proxy = 'https://proxycy.herokuapp.com/' + url;
       let itemNo = i;
-      let qty = jsonData[i];
 
       axios
         .get(proxy)
-        .then(res => {
+        .then((res) => {
           const $ = cheerio.load(res.data);
           const offer = $('.olpOffer').first();
           var item = {};
 
           sleeper(2000);
 
-          let image = $('#olpProductImage a img')
+          let image = $('#olpProductImage a img').first().attr('src');
+          let brand = $('#olpProductByline').first().text().trim();
+          let title = $('#olpProductDetails h1').first().text().trim();
+          let price = offer.find('.olpOfferPrice').text().trim();
+          let shipping = offer.find('.olpShippingPrice').text().trim();
+          let reviews = $('#olpProductDetails .a-link-normal')
             .first()
-            .attr('src');
-          let brand = $('#olpProductByline')
-            .first()
             .text()
             .trim();
-          let price = offer
-            .find('.olpOfferPrice')
-            .text()
-            .trim();
-          let shipping = offer
-            .find('.olpShippingPrice')
-            .text()
-            .trim();
+          let stars = $('.a-icon-alt').first().text().trim();
 
           if (price != '') {
             if (shipping != '') {
@@ -62,20 +56,22 @@ class Item extends React.Component {
 
             price = price.replace(',', '').match(/\d+/)[0];
             price = +price + +shipping;
-            item.unitPrice = toPrice((+price / +qty) * 0.071);
-            item.price = price;
+            stars = stars.replace(' out of ', '/').replace(' stars', '');
             item.itemNo = itemNo;
             item.image = image;
             item.brand = brand;
+            item.title = title;
+            item.price = price;
+            item.reviews = reviews;
+            item.stars = stars;
             item.url = url;
-            item.qty = qty;
 
             itemList.push(item);
           }
 
           this.setState({ items: itemList });
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     }
@@ -95,15 +91,16 @@ class Item extends React.Component {
         dataField: 'image',
         text: 'Image',
         formatter: imageFormatter,
-        sort: true
+        sort: true,
       },
       { dataField: 'brand', text: 'Brand', sort: true },
-      { dataField: 'qty', text: 'Quantity', sort: true },
-      { dataField: 'price', text: 'Price (JPY)', sort: true },
-      { dataField: 'unitPrice', text: 'Unit Price (HKD)', sort: true }
+      { dataField: 'title', text: 'Title', sort: true },
+      { dataField: 'price', text: 'Price (USD)', sort: true },
+      { dataField: 'reviews', text: 'Reviews', sort: true },
+      { dataField: 'stars', text: 'Stars', sort: true },
     ];
 
-    const defaultSorted = [{ dataField: 'unitPrice', order: 'asc' }];
+    const defaultSorted = [{ dataField: 'price', order: 'asc' }];
 
     return (
       <BootstrapTable
